@@ -738,7 +738,7 @@ export const ProjectList = () => {
                                 <ProjectEdit
                                     isOpenUpdate={isOpenUpdate}
                                     handleClose={setIsOpenUpdate}
-                                    setProjects={setProjects}
+                                    getProjects={getProjects}
                                     {...values}
                                 />
                                 <ProjectDetails

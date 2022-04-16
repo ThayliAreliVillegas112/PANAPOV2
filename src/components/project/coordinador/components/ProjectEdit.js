@@ -29,13 +29,13 @@ export const ProjectEdit = ({
       priority: yup.string().required("Campo obligatorio"),
     }),
     onSubmit: (valuesFormik) => {
+      
       const project1 = {
         ...valuesFormik,
-        id: id,
-        // statusProject:{
-        //   id: parseInt(values.statusProject?.id)
-        // },
-        // priority: priority
+         statusProject:{
+           id: parseInt(valuesFormik.statusProject),
+         }
+         
       };
       console.log(project1);
       Alert.fire({
@@ -50,7 +50,7 @@ export const ProjectEdit = ({
         preConfirm: () => {
           console.log("entró ");
           return axios({
-            url: "/project/",
+            url: "/project/update",
             method: "PUT",
             data: JSON.stringify(project1),
 
@@ -61,23 +61,31 @@ export const ProjectEdit = ({
               console.log(project1);
               if (!response.error) {
                 getProjects();
-                handleCloseForm();
                 Alert.fire({
                   title: titleExito,
                   text: msjExito,
                   icon: "success",
                   confirmButtonText: "Aceptar",
+                }).then((result)=>{
+                  if(result.isConfirmed){
+                    handleCloseForm();
+                  }
                 });
               }
               return response;
             })
             .catch((error) => {
+              console.log(error);
               Alert.fire({
                 title: titleError,
                 confirmButtonColor: "#198754",
                 text: msjError,
                 icon: "error",
                 confirmButtonText: "Aceptar",
+              }).then((result)=>{
+                if (result.isConfirmed) {
+                  handleCloseForm();
+                }
               });
               console.log("No hizo el cambio");
             });
@@ -105,7 +113,7 @@ export const ProjectEdit = ({
     formikModify.values.id = id
     formikModify.values.statusProject = statusProject;
     formikModify.values.priority = priority;
-  }, [isOpenUpdate, id]);
+  }, [isOpenUpdate]);
 
   return (
     <>

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row, Card, Collapse } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
-import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../../shared/plugins/alert";
-import axios from "../../../../shared/plugins/axios";
+import { AlertData } from "../../../../shared/components/alertData"
 import DataTable from "react-data-table-component";
-
 import { CustomLoader } from "../../../../shared/components/CustomLoader"
 
 export const ProjectDetails = ({
@@ -17,13 +15,14 @@ export const ProjectDetails = ({
   description,
   months,
   name,
+  team,
+  acronym,
   numberBeca,
   client,
   project,
   statusProject,
   priceClient,
   priority,
-  personTeam,
   status
 }) => {
 
@@ -34,6 +33,7 @@ export const ProjectDetails = ({
     cotizacion: cotizacion,
     months: months,
     name: name,
+    acronym: acronym,
     status: status,
     description: description,
     numberBeca: numberBeca,
@@ -42,7 +42,6 @@ export const ProjectDetails = ({
     statusProject: statusProject,
     priceClient: priceClient,
     priority: priority,
-    personTeam: personTeam,
     status: status
   });
 
@@ -52,18 +51,64 @@ export const ProjectDetails = ({
   const [isOpenTeam, setIsOpenTeam] = useState(true);
   const [isOpenProg, setIsOpenProg] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [programmers, setProgrammers] = useState([])
+  const [rdTeam, setRdTeam] = useState({ name: "", surname: "", secondSurname: "", email: "" })
+  const [rapeTeam, setRapeTeam] = useState({ name: "", surname: "", secondSurname: "", email: "" })
+  let personTeam = [];
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setValues({ ...values, [name]: value });
   }
 
-
   const handleCloseForm = () => {
-    handleClose(false);
     setValues({});
+    setRdTeam({ name: "", surname: "", secondSurname: "", email: "" })
+    setRapeTeam({ name: "", surname: "", secondSurname: "", email: "" })
+    setProgrammers([])
+    handleClose(false);
   };
+
+  const getTeam = () => {
+    if (personTeam.length > 0) {
+      let temp = [];
+      temp = programmers;
+      for (let i = 0; i < personTeam.length; i++) {
+        let data = personTeam[i];
+        switch (data.rolProject.description) {
+          case "RD":
+            let rd = {
+              name: data.person.name,
+              surname: data.person.surname,
+              secondSurname: data.person.secondSurname,
+              email: data.person.email
+            }
+            setRdTeam(rd)
+            break;
+          case "RAPE":
+            let rape = {
+              name: data.person.name,
+              surname: data.person.surname,
+              secondSurname: data.person.secondSurname,
+              email: data.person.email
+            }
+            setRapeTeam(rape)
+            break;
+          default:
+            temp.push(data.person)
+            break;
+        }
+      }
+      setProgrammers(temp);
+      console.log(programmers)
+      console.log("Sí hay team")
+    } else {
+      console.log("No hay team")
+      setRdTeam({ name: "", surname: "", secondSurname: "", email: "" })
+      setProgrammers([]);
+      setRapeTeam({ name: "", surname: "", secondSurname: "" , email: ""})
+    }
+  }
 
   useEffect(() => {
     setValues({
@@ -73,6 +118,7 @@ export const ProjectDetails = ({
       cotizacion: cotizacion,
       months: months,
       name: name,
+      acronym: acronym,
       status: status,
       description: description,
       numberBeca: numberBeca,
@@ -81,19 +127,25 @@ export const ProjectDetails = ({
       statusProject: statusProject,
       priceClient: priceClient,
       priority: priority,
-      personTeam: personTeam,
       status: status
     });
+    personTeam = team === undefined ? [] : team;
+    console.log(personTeam)
+    getTeam();
   }, [isOpenDetails]);
 
   const columnsProg = [
     {
       name: <h6 className="text-center">Nombre</h6>,
-      cell: (row) => <div className="txt4">{row.name}</div>,
+      cell: (row) => <div className="txt4">{row.name + " " + row.surname + " " + row.secondSurname}</div>,
+    },
+    {
+      name: <h6 className="text-center">Correo</h6>,
+      cell: (row) => <div className="txt4">{row.email}</div>,
     },
     {
       name: <h6>Rol</h6>,
-      cell: (row) => <div className="txt4">{row.profession}</div>,
+      cell: (row) => <div className="txt4">Becario</div>,
     }
   ]
 
@@ -131,35 +183,35 @@ export const ProjectDetails = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Proyecto anterior</Form.Label>
+                        <Form.Label className="font-weight-normal">Proyecto anterior</Form.Label>
                         <Form.Control name="project" value={values.project === null || values.project === undefined ? "No aplica" : values.project?.acronym} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Nombre</Form.Label>
+                        <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="name" value={values.name} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Acrónimo</Form.Label>
-                        <Form.Control name="acronym" value={values.project?.acronym} onChange={handleChange} type="text" readOnly />
+                        <Form.Label className="font-weight-normal">Acrónimo<span className="text-danger">*</span></Form.Label>
+                        <Form.Control name="acronym" value={values.acronym} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Estado del proyecto</Form.Label>
+                        <Form.Label className="font-weight-normal">Estado del proyecto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="statusProject" value={values.statusProject?.description} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-4 mb-4" >
-                        <Form.Label>Prioridad</Form.Label>
+                        <Form.Label className="font-weight-normal">Prioridad<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="priority" value={values.priority} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-4 mb-4" >
-                        <Form.Label>Fecha de inicio</Form.Label>
+                        <Form.Label className="font-weight-normal">Fecha de inicio<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="dateStart" value={values.dateStart} onChange={handleChange} type="date" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-4 mb-4" >
-                        <Form.Label>Fecha de fin</Form.Label>
+                        <Form.Label className="font-weight-normal">Fecha de fin<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="dateEnd" value={values.dateEnd} onChange={handleChange} type="date" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-12 mb-4" >
-                        <Form.Label>Descripción del proyecto</Form.Label>
+                        <Form.Label className="font-weight-normal">Descripción del proyecto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="description" value={values.description} onChange={handleChange} as="textarea" readOnly />
                       </Form.Group>
                     </div>
@@ -170,8 +222,8 @@ export const ProjectDetails = ({
             {/* DATOS DEL CLIENTE */}
             <Card className="mb-3" bg="white">
               <Card.Header onClick={() => setIsOpenClient(!isOpenClient)}
-              aria-controls="example-collapse-text"
-                aria-expanded = {isOpenClient}
+                aria-controls="example-collapse-text"
+                aria-expanded={isOpenClient}
                 type="button">
                 <Row>
                   <Col as="h6" className="text-bold">Cliente</Col>
@@ -191,8 +243,8 @@ export const ProjectDetails = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4"  >
-                        <Form.Label>Nombre completo</Form.Label>
-                        <Form.Control name="client" value={values.client?.name+" "+values.client?.surname+" "+values.client?.secondSurname} onChange={handleChange} type="text" readOnly />
+                        <Form.Label className="font-weight-normal">Nombre completo<span className="text-danger">*</span></Form.Label>
+                        <Form.Control name="client" value={values.client?.name + " " + values.client?.surname + " " + values.client?.secondSurname} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                     </div>
                   </Card.Body>
@@ -222,20 +274,20 @@ export const ProjectDetails = ({
                 <div id="example-collapse-text">
                   <Card.Body>
                     <div className="row">
-                    <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Presupuesto</Form.Label>
+                      <Form.Group className="col-md-6 mb-4" >
+                        <Form.Label className="font-weight-normal">Presupuesto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="cotizacion" value={values.cotizacion} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Precio al cliente</Form.Label>
+                        <Form.Label className="font-weight-normal">Precio al cliente<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="priceClient" value={values.priceClient} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Tiempo estimado (meses)</Form.Label>
+                        <Form.Label className="font-weight-normal">Tiempo estimado (meses)<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="months" value={values.months} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Cantidad de becarios</Form.Label>
+                        <Form.Label className="font-weight-normal">Cantidad de becarios<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="numberBeca" value={values.numberBeca} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                     </div>
@@ -244,7 +296,7 @@ export const ProjectDetails = ({
               </Collapse>
             </Card>
             {/* EQUIPO DE TRABAJO  */}
-             <Card className="mb-3" bg="white">
+            <Card className="mb-3" bg="white">
               <Card.Header onClick={() => setIsOpenTeam(!isOpenTeam)}
                 aria-controls="example-collapse-text"
                 aria-expanded={isOpenTeam}
@@ -266,14 +318,14 @@ export const ProjectDetails = ({
                 <div id="example-collapse-text">
                   <Card.Body>
                     <div className="row">
-                      {/* <Form.Group className="col-md-6 mb-4"  >
+                      <Form.Group className="col-md-6 mb-4"  >
                         <Form.Label className="font-weight-normal">Responsable de proyecto<span className="text-danger">*</span></Form.Label>
-                        <Form.Control name="rape" value={values.rape} onChange={handleChange}> </Form.Control>                        
+                        <Form.Control value={rapeTeam.name + " " + rapeTeam.surname + " " + rapeTeam.secondSurname} onChange={() => setRapeTeam} />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4"  >
                         <Form.Label className="font-weight-normal">Responsable de desarrollo<span className="text-danger">*</span></Form.Label>
-                        <Form.Control name="rd" value={values.rd} onChange={handleChange}> </Form.Control>
-                      </Form.Group> */}
+                        <Form.Control value={rdTeam.name + " " + rdTeam.surname + " " + rdTeam.secondSurname} onChange={() => setRdTeam} />
+                      </Form.Group>
                     </div>
                     {/* ANALISTAS PROGRAMADORES */}
                     <Card className="mb-3" bg="white">
@@ -297,17 +349,23 @@ export const ProjectDetails = ({
                       <Collapse in={isOpenProg}>
                         <div id="example-collapse-text">
                           <Card.Body>
-                            <div className="row">                        
-                              
+                            <div className="row">
+                              <DataTable
+                                columns={columnsProg}
+                                data={programmers}
+                                noDataComponent={<AlertData title={"No hay programadores seleccionados"} />}
+                                progressPending={isLoading}
+                                progressComponent={<CustomLoader />}
+                              />
                             </div>
                           </Card.Body>
                         </div>
                       </Collapse>
                     </Card>
-                   </Card.Body>
+                  </Card.Body>
                 </div>
               </Collapse>
-            </Card> 
+            </Card>
             <Form.Group className="mb-4">
               <Row>
                 <Col className="text-end">

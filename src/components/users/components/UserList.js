@@ -19,8 +19,15 @@ import * as yup from "yup";
 import axios from "../../../shared/plugins/axios";
 import { useFormik } from "formik";
 import "../../../assets/css/main.css";
+import { AlertData } from "../../../shared/components/alertData"
+//iconos de fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEdit, faFile, faInfo, faPlay } from '@fortawesome/free-solid-svg-icons'
 
-export const UserList = ({ handleClose }) => {
+
+
+export const UserList = () => {
     const [filterText, setFilterText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -112,7 +119,7 @@ export const UserList = ({ handleClose }) => {
                             setIsOpenDetails(true);
                         }}
                     >
-                        <FeatherIcon icon="info" />
+                        <FontAwesomeIcon className="btnS" icon={faInfo} size="lg"/>
                     </Button>
                 </div>
             ),
@@ -133,7 +140,7 @@ export const UserList = ({ handleClose }) => {
                             setIsOpenUpdate(true);
                         }}
                     >
-                        <FeatherIcon icon="edit" />
+                        <FontAwesomeIcon  icon={faEdit} size="lg" />
                     </Button>
                 </div>
             ),
@@ -366,7 +373,7 @@ export const UserList = ({ handleClose }) => {
                                         <div id="example-collapse-text">
                                             <Form className="row" onSubmit={formik.handleSubmit}>
                                                 <Form.Group className="col-md-6 mb-4" >
-                                                    <Form.Label>Rol</Form.Label>
+                                                    <Form.Label className="font-weight-normal">Rol<span className="text-danger">*</span></Form.Label>
                                                     <Form.Select onChange={formik.handleChange} name="authorities" value={formik.values.authorities}>
                                                         <option value="">Seleccione una opción</option>
                                                         {
@@ -380,7 +387,7 @@ export const UserList = ({ handleClose }) => {
                                                     ) : null}
                                                 </Form.Group>
                                                 <Form.Group className="col-md-6 mb-4" >
-                                                    <Form.Label>Correo</Form.Label>
+                                                    <Form.Label className="font-weight-normal">Correo<span className="text-danger">*</span></Form.Label>
                                                     
                                                     <Form.Select name="email" value={formik.values.email} onChange={formik.handleChange}>
                                                         <option>Seleccione una opción</option>
@@ -423,6 +430,7 @@ export const UserList = ({ handleClose }) => {
                                 <DataTable
                                     columns={columns}
                                     data={users}
+                                    noDataComponent={<AlertData title={"No hay registros"} />}
                                     pagination
                                     paginationComponentOptions={paginationOptions}
                                     progressPending={isLoading}

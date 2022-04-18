@@ -4,17 +4,14 @@ import {
   Row,
   Col,
   Container,
-  Form,
   Card,
   Badge,
-  InputGroup,
-  FormControl,
-  Collapse,
   ProgressBar,
 } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
 import DataTable from "react-data-table-component";
-import { ProjectDetailsRape } from "./ProjectDetailsRape";
+import { AlertData } from "../../../../shared/components/alertData"
+import { ProjectDetails } from "../../coordinador/components/ProjectDetails"; 
 import { CustomLoader } from "../../../../shared/components/CustomLoader";
 import { FilterComponent } from "../../../../shared/components/FilterComponent";
 import Alert, {
@@ -27,19 +24,9 @@ import Alert, {
 } from "../../../../shared/plugins/alert";
 import { useNavigate } from "react-router-dom";
 import { ProjectCreate } from "./ProjectCreate";
+import axios from "../../../../shared/plugins/axios";
 
 export const ProjectListRape = () => {
-  let value = "";
-  const navigation = useNavigate();
-
-  const handleReport = () => {
-    navigation("/report", { state: { id: value } });
-  };
-
-  const setValue = (id) => {
-    value = id;
-  };
-
   const [filterText, setFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,38 +39,52 @@ export const ProjectListRape = () => {
   const [isOpenReports, setIsOpenReports] = useState(false);
   const [isOpenData, setIsOpenData] = useState(false);
 
+  let value = "";
+  const navigation = useNavigate();
+  let username = localStorage.getItem("username")
+
+  const handleReport = () => {
+    navigation("/report", { state: { id: value } });
+  };
+
+  const setValue = (id) => {
+    value = id;
+  };
+
   useEffect(() => {
     setIsLoading(true);
     getProjectsRape();
   }, []);
 
-  let projectRape = [
-    {
-      name: "PANAPO",
-      progress: 80,
-      status: "activo",
-      priority: "alta",
-      id: 134,
-    },
-    {
-      name: "TEMANTRA",
-      progress: 50,
-      status: "pausado",
-      priority: "media",
-      id: 135,
-    },
-    {
-      name: "SIGEH",
-      progress: 20,
-      status: "cancelado",
-      priority: "baja",
-      id: 136,
-    },
-  ];
+
+  const getProjectsRape = async () => {
+    await axios({ url: "/project/", method: "GET" })
+      .then((response) => {
+        let data = response.data;
+        console.log(data);
+        let projectTemp = []
+        for (let r = 0; r < data.length; r++) {
+          for (let m = 0; m < data[r].team.length; m++) {
+            let temp = data[r];
+            console.log(data[r].team[m].rolProject.description + " " + data[r].team[m].person.email)
+            if (data[r].team[m].rolProject.description === "RAPE" && data[r].team[m].person.email === username) {
+              projectTemp.push(temp)
+            }
+          }
+          //console.log(data[i].team[m])
+        }
+        setProjectsRape(projectTemp);
+        console.log(projectTemp);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const columns = [
     {
-      name: <h6 width="70%">#</h6>,
+      name: <h6>#</h6>,
       cell: (row, index) => (
         <div>
           <h6>{index + 1}</h6>
@@ -95,14 +96,14 @@ export const ProjectListRape = () => {
     },
     {
       name: <h6 className="text-center">Identificador</h6>,
-      cell: (row) => <div className="txt4">{row.name}</div>,
+      cell: (row) => <div className="txt4">{row.acronym}</div>,
     },
     {
-      name: <h6 style={{ width: "100%" }}>Avance real del proyecto</h6>,
+      name: <h6>Avance real del proyecto</h6>,
       cell: (row) => (
         <div className="txt4">
-          <ProgressBar now={row.progress} variant="success" />
-          <small>{row.progress}% completado</small>,
+          <ProgressBar now={row.percentage} variant="success" />
+          <small>{row.percentage}% completado</small>,
         </div>
       ),
     },
@@ -110,31 +111,32 @@ export const ProjectListRape = () => {
       name: <h6>Estado</h6>,
       cell: (row) => (
         <>
-          {row.status === "activo" ? (
-            <h6>
-              <Badge bg="success">
-                <div>{row.status}</div>
-              </Badge>
-            </h6>
-          ) : row.status === "cancelado" ? (
-            <h6>
-              <Badge bg="danger">
-                <div>{row.status}</div>
-              </Badge>
-            </h6>
-          ) : row.status === "pausado" ? (
-            <h6>
-              <Badge bg="warning">
-                <div>{row.status}</div>
-              </Badge>
-            </h6>
-          ) : (
-            <h6>
-              <Badge bg="primary">
-                <div>{row.status}</div>
-              </Badge>
-            </h6>
-          )}
+          {
+            row.statusProject.description === "Activo" ? (
+              <h6>
+                <Badge bg="success">
+                  <div>{row.statusProject.description}</div>
+                </Badge>
+              </h6>
+            ) : (row.statusProject.description === "Cancelado" ?
+              <h6>
+                <Badge bg="danger">
+                  <div>{row.statusProject.description}</div>
+                </Badge>
+              </h6> : (row.statusProject.description === "Pausado" ?
+                <h6>
+                  <Badge bg="warning">
+                    <div>{row.statusProject.description}</div>
+                  </Badge>
+                </h6> :
+                <h6>
+                  <Badge bg="primary">
+                    <div>{row.statusProject.description}</div>
+                  </Badge>
+                </h6>
+              )
+            )
+          }
         </>
       ),
     },
@@ -142,25 +144,26 @@ export const ProjectListRape = () => {
       name: <h6>Prioridad</h6>,
       cell: (row) => (
         <>
-          {row.priority === "alta" ? (
-            <h6>
-              <Badge bg="danger">
-                <div>{row.priority}</div>
-              </Badge>
-            </h6>
-          ) : row.priority === "media" ? (
-            <h6>
-              <Badge bg="warning">
-                <div>{row.priority}</div>
-              </Badge>
-            </h6>
-          ) : (
-            <h6>
-              <Badge bg="success">
-                <div>{row.priority}</div>
-              </Badge>
-            </h6>
-          )}
+          {
+            row.priority === "Alta" ? (
+              <h6>
+                <Badge bg="danger">
+                  <div>{row.priority}</div>
+                </Badge>
+              </h6>
+            ) : (row.priority === "Media" ?
+              <h6>
+                <Badge bg="warning">
+                  <div>{row.priority}</div>
+                </Badge>
+              </h6> :
+              <h6>
+                <Badge bg="success">
+                  <div>{row.priority}</div>
+                </Badge>
+              </h6>
+            )
+          }
         </>
       ),
     },
@@ -186,11 +189,7 @@ export const ProjectListRape = () => {
       ),
     },
     {
-      name: (
-        <div>
-          <h6>Hacer reporte</h6>
-        </div>
-      ),
+      name: <h6>Hacer reporte</h6>,
       cell: (row) => (
         <div>
           <Button
@@ -205,14 +204,9 @@ export const ProjectListRape = () => {
           </Button>
         </div>
       ),
-      center: true,
     },
     {
-      name: (
-        <div>
-          <h6>Ver reportes</h6>
-        </div>
-      ),
+      name:  <h6>Ver reportes</h6>,
       cell: (row) => (
         <div>
           <Button
@@ -227,19 +221,17 @@ export const ProjectListRape = () => {
           </Button>
         </div>
       ),
-      center: true,
     },
   ];
-
-  const getProjectsRape = () => {
-    setProjectsRape(projectRape);
-    setIsLoading(false);
-  };
 
   const paginationOptions = {
     rowsPerPageText: "Filas por página",
     rangeSeparatorText: "de",
   };
+
+  const filteredItems = projectsRape.filter(
+    (item) => item.acronym && item.acronym.toLowerCase().includes(filterText.toLowerCase())
+  );
 
   const searchComponent = React.useMemo(() => {
     const search = () => {
@@ -279,7 +271,8 @@ export const ProjectListRape = () => {
               <Card.Body>
                 <DataTable
                   columns={columns}
-                  data={projectsRape}
+                  data={filteredItems}
+                  noDataComponent={<AlertData title={"No hay registros"} />}
                   pagination
                   paginationComponentOptions={paginationOptions}
                   progressPending={isLoading}
@@ -287,10 +280,9 @@ export const ProjectListRape = () => {
                   subHeader
                   subHeaderComponent={searchComponent}
                 />
-                <ProjectDetailsRape
+                <ProjectDetails
                   isOpenDetails={isOpenDetails}
-                  handleClose={() => setIsOpenDetails(false)}
-                  setProjectsRape={setProjectsRape}
+                  handleClose={setIsOpenDetails}
                   {...values}
                 />
                 <ProjectCreate

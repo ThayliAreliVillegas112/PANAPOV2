@@ -14,6 +14,7 @@ import axios from "../../../shared/plugins/axios";
 export const UserDetails = ({
   isOpenDetails,
   handleClose,
+  getPerson,
   setUsers,
   name,
   surname,
@@ -52,7 +53,7 @@ export const UserDetails = ({
               <Form.Control
                 name="name"
                 placeholder="Nombre del proyecto"
-                value={values.name}
+                value={values.person?.name}
                 readOnly
               />
             </Form.Group>

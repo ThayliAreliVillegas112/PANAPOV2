@@ -115,7 +115,7 @@ export const RoleEdit = ({
         <Modal.Body>
           <Form className="row" onSubmit={formikModify.handleSubmit}>
             <Form.Group className="col-md-12 mb-4" >
-              <Form.Label>Description</Form.Label>
+              <Form.Label className="font-weight-normal">Descripción<span className="text-danger">*</span></Form.Label>
               <Form.Control name="description" type="text" placeholder="" value={formikModify.values.description} onChange={formikModify.handleChange} />
               {formikModify.errors.name ? (
                 <span className='text-danger'>{formikModify.errors.description}</span>
@@ -133,7 +133,7 @@ export const RoleEdit = ({
                     type="submit"
                     disabled={!(formikModify.isValid && formikModify.dirty)}
                   >
-                    Guardar
+                    Confirmar
                   </Button>
                 </Col>
               </Row>

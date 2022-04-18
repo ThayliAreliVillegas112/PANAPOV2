@@ -18,6 +18,12 @@ import * as yup from "yup";
 import axios from "../../../shared/plugins/axios";
 import { useFormik } from "formik";
 import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../shared/plugins/alert";
+import { AlertData } from "../../../shared/components/alertData"
+//iconos de fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEdit, faFile, faInfo, faTrash } from '@fortawesome/free-solid-svg-icons'
+
 
 export const DirectionList = () => {
 
@@ -217,7 +223,7 @@ export const DirectionList = () => {
                             });
                             setIsOpenDetails(true);
                         }}>
-                        <FeatherIcon icon="info"/>
+                        <FontAwesomeIcon className="btnS" icon={faInfo} size="lg"/>
                     </Button>
                 </div>
             ),
@@ -241,7 +247,7 @@ export const DirectionList = () => {
                             setIsOpenUpdate(true)
                         }}
                     >
-                        <FeatherIcon icon="edit" />
+                        <FontAwesomeIcon  icon={faEdit} size="lg" />
                     </Button>
                 </div>
             ),
@@ -257,7 +263,7 @@ export const DirectionList = () => {
                             onDelete(row.id);
                         }}
                     >
-                        <FeatherIcon icon="trash" />
+                        <FontAwesomeIcon  icon={faTrash} size="lg" />
                     </Button>
                 </div>
             ),
@@ -324,7 +330,7 @@ export const DirectionList = () => {
                                     <Card.Body>
                                         <Form className="row" onSubmit={formik.handleSubmit}>
                                             <Form.Group className="col-md-4 mt-3">
-                                                <Form.Label>Nombre(s)</Form.Label>
+                                                <Form.Label className="font-weight-normal">Nombre(s)<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="text" placeholder="Ejemplo: Emmanuel" name="name" value={formik.values.name}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.name ? (
@@ -332,7 +338,7 @@ export const DirectionList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-4 mt-3">
-                                                <Form.Label>Primer apellido</Form.Label>
+                                                <Form.Label className="font-weight-normal">Primer apellido<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="text" placeholder="Ejemplo: Herrera" name="surname" value={formik.values.surname}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.surname ? (
@@ -340,7 +346,7 @@ export const DirectionList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-4 mt-3">
-                                                <Form.Label>Segundo apellido</Form.Label>
+                                                <Form.Label className="font-weight-normal">Segundo apellido<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="text" placeholder="Ejemplo: Ibarra" name="secondSurname" value={formik.values.secondSurname}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.secondSurname ? (
@@ -348,7 +354,7 @@ export const DirectionList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-6 mt-3">
-                                                <Form.Label>Correo electrónico</Form.Label>
+                                                <Form.Label className="font-weight-normal">Correo electrónico<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control
                                                     type="email"
                                                     placeholder="Ejemplo: utez@utez.edu.mx" name="email" value={formik.values.email}
@@ -387,7 +393,7 @@ export const DirectionList = () => {
                                 <DataTable
                                     columns={columns}
                                     data={filteredItems}
-                                    noDataComponent="No hay registros"
+                                    noDataComponent={<AlertData title={"No hay registros"} />}
                                     pagination
                                     paginationComponentOptions={paginationOptions}
                                     progressPending={isLoading}

@@ -32,8 +32,8 @@ export const AppRouter = () => {
         <Route
           path="*"
           element={
-            state.userToken != null ? (
-              state.rolSign == "COORDINADOR" ?
+            state.userToken !== null ? (
+              state.rolSign === "COORDINADOR" ?
                 <>
                   <body className="hold-transition sidebar-mini">
                     <div className="wrapper">
@@ -42,23 +42,21 @@ export const AppRouter = () => {
                       <Container fluid>
                         <Routes>
                           <Route path={"/"} element={<DashboardScreen />} />
-                          <Route path={"/project"} element={<ProjectScreen />} />
-                          <Route path={"/projectrd"} element={<ProjectScreenRd />} />
-                          <Route path={"/projectrape"} element={<ProjectScreenRape />} />
-                          <Route path={"/personal"} element={<PersonalScreen />} />
-                          <Route path={"/direction"} element={<DirectionScreen />} />
-                          <Route path={"/user"} element={<UserScreen />} />
-                          <Route path={"/client"} element={<ClientScreen />} />
-                          <Route path={"/role"} element={<RoleScreen />} />
-                          <Route path={"/report"} element={<ReportScreen />} />
-                          <Route path={"/changerol"} element={<ChangeRol />} />
+                          <Route path={"/project"} element={<ProjectScreen/>} />
+                          <Route path={"/personal"} element={<PersonalScreen/>} />
+                          <Route path={"/direction"} element={<DirectionScreen/>} />
+                          <Route path={"/user"} element={<UserScreen/>} />
+                          <Route path={"/client"} element={<ClientScreen/>} />
+                          <Route path={"/role"} element={<RoleScreen/>} />
+                          <Route path={"/report"} element={<ReportScreen/>} />
+                          <Route path={"/changerol"} element={<ChangeRol/>} />
                           <Route path="*" element={<div>ERROR 404</div>} />
                         </Routes>
                       </Container>
                     </div>
                   </body>
                 </>
-              : state.rolSign == "RD" ?
+              : state.rolSign === "RD" ?
               <>
                 <body className="hold-transition sidebar-mini">
                   <div className="wrapper">
@@ -76,7 +74,7 @@ export const AppRouter = () => {
                   </div>
                 </body>
               </>
-              : state.rolSign == "RAPE" ?
+              : state.rolSign === "RAPE" ?
               <>
                 <body className="hold-transition sidebar-mini">
                   <div className="wrapper">
@@ -94,7 +92,7 @@ export const AppRouter = () => {
                   </div>
                 </body>
               </> 
-              : state.rolSign == "DIRECTIVO" ?
+              : state.rolSign === "DIRECTIVO" ?
               <>
                 <body className="hold-transition sidebar-mini">
                   <div className="wrapper">

@@ -59,7 +59,7 @@ export const PersonalDetails = ({
                 <Modal.Body>
                     <Form className="row">
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label className="form-label">Nombre</Form.Label>
+                            <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="name"
                                 value={values.name}
@@ -68,7 +68,7 @@ export const PersonalDetails = ({
                             />
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label className="form-label">Primer apellido</Form.Label>
+                            <Form.Label className="font-weight-normal">Primer apellido<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="surname"
                                 value={values.surname}
@@ -77,7 +77,7 @@ export const PersonalDetails = ({
                             />
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label className="form-label">Segundo apellido</Form.Label>
+                            <Form.Label className="font-weight-normal">Segundo apellido<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="secondSurname"
                                 value={values.secondSurname}
@@ -86,7 +86,7 @@ export const PersonalDetails = ({
                             />
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label className="form-label">Correo electrónico</Form.Label>
+                            <Form.Label className="font-weight-normal">Correo electrónico<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="email"
                                 value={values.email}
@@ -95,7 +95,7 @@ export const PersonalDetails = ({
                             />
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label className="form-label">Fecha de nacimiento</Form.Label>
+                            <Form.Label className="font-weight-normal">Fecha de nacimiento<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="dateBirth"
                                 value={values.dateBirth}
@@ -104,7 +104,7 @@ export const PersonalDetails = ({
                             />
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label className="form-label">Teléfono</Form.Label>
+                            <Form.Label className="font-weight-normal">Teléfono<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="phone"
                                 value={values.phone}
@@ -113,7 +113,7 @@ export const PersonalDetails = ({
                             />
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label>Rol</Form.Label>
+                            <Form.Label className="font-weight-normal">Rol<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="profession"
                                 value={values.profession}

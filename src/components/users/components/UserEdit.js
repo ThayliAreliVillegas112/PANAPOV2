@@ -3,31 +3,92 @@ import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
 import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../shared/plugins/alert";
 import axios from "../../../shared/plugins/axios";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 export const UserEdit = ({
     isOpenUpdate,
-    handleClose,
-    setUsers,
-    name,
-    surname,
-    lastname,
-    status
+    handleClose, 
+    status,
+    id
 }) => {
 
-    const [values, setValues] = useState({ name: name, surname: surname, lastname: lastname });
+    const [values, setValues] = useState({id:id});
 
     const handleCloseForm = () => {
-        handleClose();
+
+        formikModify.resetForm();
         setValues({});
+        handleClose(false);
     };
 
     useEffect(() => {
         setValues({
-            name: name,
-            surname: surname,
-            lastname: lastname
-        });
-    }, [name, surname, lastname]);
+            id:id
+        })
+        
+    }, []);
+
+    const formikModify = useFormik({
+        initialValues: {
+            password: "",
+            confirmPassword: "",
+        },
+        validationSchema: yup.object().shape({
+            password: yup.string().required("Campo obligatorio"),
+            confirmPassword: yup.string().required("Campo obligatorio"),
+        }),
+        onSubmit: (valuesFormik) => {
+            const pass = {
+                ...valuesFormik,
+                id: id,
+                
+            };
+            console.log(pass);
+            Alert.fire({
+                title: titleConfirmacion,
+                text: msjConfirmacion,
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                showCancelButton: true,
+                reverseButtons: true,
+                showLoaderOnConfirm: true,
+                icon: "warning",
+                preConfirm: () => {
+                    return axios({
+                        url: "/user/update",
+                        method: "PUT",
+                        data: JSON.stringify(pass),
+                    })
+                        .then((response) => {
+                            console.log(response);
+                            if (!response.error) {
+                                handleCloseForm();
+                                // getPersonal();
+                                Alert.fire({
+                                    title: "Se ha cambiado la contraseña exitosamente",
+                                    text: msjExito,
+                                    icon: "success",
+                                    confirmButtonText: "Aceptar",
+                                });
+                            }
+                            return response;
+                        })
+                        .catch((error) => {
+                            Alert.fire({
+                                title: titleError,
+                                confirmButtonColor: "#198754",
+                                text: msjError,
+                                icon: "error",
+                                confirmButtonText: "Aceptar",
+                            });
+                        });
+                },
+                backdrop: true,
+                allowOutsideClick: !Alert.isLoading,
+            });
+        },
+    });
 
     return (
         <>
@@ -36,16 +97,35 @@ export const UserEdit = ({
                     <Modal.Title>Modificar Usuario</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group className="col-md-12" >
-                            <Form.Label>Rol</Form.Label>
-                            <Form.Select aria-label="Default select example">
-                                <option value="1">Directivo</option>
-                                <option value="1">Coordinador</option>
-                                <option value="2">Responsable de proyecto</option>
-                                <option value="3">Responsable de desarrollo</option>
-                            </Form.Select>
+                    <Form  className="row" onSubmit={formikModify.handleSubmit}>
+                        <Form.Group className="col-md-12 mb-4">
+                            <Form.Label className="font-weight-normal">Contraseña <span className="text-danger">*</span></Form.Label>
+                            <Form.Control
+                                name="password"
+                                type="password"
+                                placeholder="********"
+                                value={formikModify.values.password}
+                                onChange={formikModify.handleChange}
+                            />
+                            
                         </Form.Group>
+                        <Form.Group className="col-md-12 mb-4">
+                            <Form.Label className="font-weight-normal">Confirmar contraseña<span className="text-danger">*</span></Form.Label>
+                            <Form.Control
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="********"
+                                value={formikModify.values.confirmPassword}
+                                onChange={formikModify.handleChange}
+                            />
+                            <Form.Text muted>
+                                La contraseña solo se cambiará si ingresa algún valor
+                            </Form.Text>
+                            {formikModify.values.confirmPassword !== "" && formikModify.values.password !== "" && formikModify.values.confirmPassword !== formikModify.values.password ? (
+                                <span className='text-danger'>Las contraseñas no son iguales</span>
+                            ) : null}                           
+                        </Form.Group>
+                        
                         <Form.Group className="mb-4 topBottom">
                             <Row>
                                 <Col className="text-end">
@@ -56,9 +136,10 @@ export const UserEdit = ({
                                         style={{ background: "#042B61", borderColor: "#042B61" }}
                                         className="ms-3"
                                         type="submit"
-                                        disabled={false}
+                                        disabled={!(formikModify.isValid && formikModify.dirty)}
+
                                     >
-                                        Guardar
+                                        Confirmar
                                     </Button>
                                 </Col>
                             </Row>

@@ -10,24 +10,33 @@ import { ProjectStart } from "./ProjectStart";
 import { CustomLoader } from "../../../../shared/components/CustomLoader";
 import { FilterComponent } from "../../../../shared/components/FilterComponent";
 import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../../shared/plugins/alert";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "../../../../assets/css/main.css";
 import "../../../../assets/css/util.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as yup from "yup";
 import axios from "../../../../shared/plugins/axios";
 import { useFormik } from "formik";
+import { AlertData } from "../../../../shared/components/alertData"
+//iconos de fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEdit, faFile, faInfo, faPlay } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faEdit, faFile, faInfo);
 
 export const ProjectList = () => {
     let value = "";
+    let nameProject = "";
     const navigation = useNavigate();
 
     const handleReport = () => {
-        navigation('/report', { state: { id: value } });
+        navigation('/report', { state: { id: value, name: nameProject } });
     }
 
-    const setValue = (id) => {
+    const setValue = (id, acronym) => {
         value = id;
+        nameProject = acronym;
     }
 
     const [filterText, setFilterText] = useState("");
@@ -81,7 +90,7 @@ export const ProjectList = () => {
                 let prospectTemp = data.filter(item => item.statusProject.description === "Prospecto")
                 setProjectsProspect(prospectTemp);
                 setIsLoading(false);
-                console.log(prospectTemp)
+                //console.log(prospectTemp)
             })
             .catch((error) => {
                 console.log(error);
@@ -95,7 +104,6 @@ export const ProjectList = () => {
                 let projectTemp = data.filter(item => item.statusProject.description != "Prospecto")
                 setProjects(projectTemp);
                 setIsLoading(false);
-                console.log(projectTemp)
             })
             .catch((error) => {
                 console.log(error);
@@ -109,7 +117,6 @@ export const ProjectList = () => {
                 let selectTemp = data.filter(item => item.statusProject.description === "Cerrado" || item.statusProject.description === "Cancelado")
                 setSelectProjects(selectTemp);
                 setIsLoading(false);
-                console.log(selectTemp)
             })
             .catch((error) => {
                 console.log(error);
@@ -117,7 +124,7 @@ export const ProjectList = () => {
     };
 
     const filteredItems = projects.filter(
-        (item) => item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
+        (item) => item.acronym && item.acronym.toLowerCase().includes(filterText.toLowerCase())
     );
 
     const columns = [
@@ -135,8 +142,8 @@ export const ProjectList = () => {
         {
             name: <h6>Avance real del proyecto</h6>,
             cell: (row) => <div className="txt4">
-                <ProgressBar now={row.progress} variant="success" />
-                <small>{row.progress}% completado</small>
+                <ProgressBar now={row.percentage} variant="success" />
+                <small>{row.percentage}% completado</small>
             </div>,
             width:"25%"
         },
@@ -207,7 +214,7 @@ export const ProjectList = () => {
                         console.log(row)
                         setIsOpenDetails(true)
                     }}>
-                    <FeatherIcon icon="info" />
+                    <FontAwesomeIcon className="btnS" icon={faInfo} size="lg"/>
                 </Button>
             </div>
         },
@@ -219,19 +226,20 @@ export const ProjectList = () => {
                         setValues(row)
                         setIsOpenUpdate(true)
                     }}>
-                    <FeatherIcon icon="edit" />
+                    <FontAwesomeIcon icon={faEdit} size="lg"/>
                 </Button>
-            </div>
+            </div>,
+            width: "15%"
         },
         {
             name: <div><h6>Reportes</h6></div>,
             cell: (row) => <div>
                 <Button variant="success" size="md" onClick={() => {
-                    setValue(row.id)
+                    setValue(row.id, row.acronym)
                     handleReport()
                 }}
                 >
-                    <FeatherIcon icon="file" />
+                    <FontAwesomeIcon icon={faFile} size="lg"/>
                 </Button>
             </div>
         },
@@ -276,9 +284,8 @@ export const ProjectList = () => {
                     onClick={() => {
                         setValues(row)
                         setIsOpenDetailsP(true)
-                        console.log(row)
                     }}>
-                    <FeatherIcon icon="info" />
+                    <FontAwesomeIcon className="btnS" icon={faInfo} size="lg"/>
                 </Button>
             </div>
         },
@@ -290,7 +297,7 @@ export const ProjectList = () => {
                         setValues(row)
                         setIsOpenUpdateP(true)
                     }}>
-                    <FeatherIcon icon="edit" />
+                    <FontAwesomeIcon icon={faEdit} size="lg"/>
                 </Button>
             </div>
         },
@@ -302,7 +309,7 @@ export const ProjectList = () => {
                         setValues(row)
                         setIsOpenStart(true)
                     }}>
-                    <FeatherIcon icon="play" />
+                    <FontAwesomeIcon  icon={faPlay} size="lg"/>
                 </Button>
             </div>
         },
@@ -357,7 +364,7 @@ export const ProjectList = () => {
                     },
                 };
             }
-            console.log(project);
+            //console.log(project);
             Alert.fire({
                 title: titleConfirmacion,
                 text: msjConfirmacion,
@@ -372,7 +379,6 @@ export const ProjectList = () => {
                 preConfirm: () => {
                     return axios({ url: "/project/", method: "POST", data: JSON.stringify(project) })
                         .then((response) => {
-                            console.log(response);
                             if (!response.error) {
                                 getProjects();
                                 getClients();
@@ -563,7 +569,7 @@ export const ProjectList = () => {
                                                                         <Form.Select name="client"
                                                                             value={formik.values.client}
                                                                             onChange={formik.handleChange}>
-                                                                            <option value="">Selecciona una opción</option>
+                                                                            <option value="">Seleccione una opción</option>
                                                                             {
                                                                                 clients.map((clientS) => (
                                                                                     <option key={clientS.id} value={clientS.id} >{clientS.name + " " + clientS.surname + " " + clientS.secondSurname}</option>
@@ -682,7 +688,7 @@ export const ProjectList = () => {
                                         <DataTable
                                             columns={columnsP}
                                             data={projectsProspect}
-                                            noDataComponent="No hay registros"
+                                            noDataComponent={<AlertData title={"No hay registros"} />}
                                             pagination
                                             paginationComponentOptions={paginationOptions}
                                             progressPending={isLoadingProspect}
@@ -727,7 +733,7 @@ export const ProjectList = () => {
                                 <DataTable
                                     columns={columns}
                                     data={filteredItems}
-                                    noDataComponent="No hay registros"
+                                    noDataComponent={<AlertData title={"No hay registros"} />}
                                     pagination
                                     paginationComponentOptions={paginationOptions}
                                     progressPending={isLoading}

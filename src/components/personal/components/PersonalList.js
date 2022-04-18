@@ -12,6 +12,13 @@ import * as yup from "yup";
 import axios from "../../../shared/plugins/axios";
 import { useFormik } from "formik";
 import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../shared/plugins/alert";
+import { AlertData } from "../../../shared/components/alertData"
+
+//iconos de fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEdit, faFile, faInfo, faPlay } from '@fortawesome/free-solid-svg-icons'
+
 
 export const PersonalList = () => {
     const [personal, setPersonal] = useState([]);
@@ -34,6 +41,7 @@ export const PersonalList = () => {
             .then((response) => {
                 //filtrar que no aparezcan los directivos
                 let data = response.data;
+                console.log(data);
                 let personalTemp = data.filter(item => item.profession.description != "Directivo")
                 setPersonal(personalTemp);
                 setIsLoading(false);
@@ -52,7 +60,7 @@ export const PersonalList = () => {
             email: "",
             dateBirth: "",
             phone: "",
-            profession: 1,
+            profession: "",
         },
         validationSchema: yup.object().shape({
             name: yup.string().required("Campo obligatorio"),
@@ -218,7 +226,7 @@ export const PersonalList = () => {
                         })
                         setIsOpenDetails(true)
                     }}>
-                    <FeatherIcon icon="info" />
+                    <FontAwesomeIcon className="btnS" icon={faInfo} size="lg"/>
                 </Button>
             </div>
         },
@@ -233,7 +241,7 @@ export const PersonalList = () => {
                         })
                         setIsOpenUpdate(true)
                     }}>
-                    <FeatherIcon icon="edit" />
+                    <FontAwesomeIcon  icon={faEdit} size="lg" />
                 </Button>
             </div>
         },
@@ -308,7 +316,7 @@ export const PersonalList = () => {
                                     <Card.Body>
                                         <Form className="row" onSubmit={formik.handleSubmit}>
                                             <Form.Group className="col-md-4" >
-                                                <Form.Label>Nombre</Form.Label>
+                                                <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="text" name="name" value={formik.values.name}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.name ? (
@@ -316,7 +324,7 @@ export const PersonalList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-4" >
-                                                <Form.Label>Primer apellido</Form.Label>
+                                                <Form.Label className="font-weight-normal">Primer apellido<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="text" name="surname" value={formik.values.surname}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.surname ? (
@@ -324,7 +332,7 @@ export const PersonalList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-4" >
-                                                <Form.Label>Segundo apellido</Form.Label>
+                                                <Form.Label className="font-weight-normal">Segundo apellido<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="text" name="secondSurname" value={formik.values.secondSurname}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.secondSurname ? (
@@ -332,7 +340,7 @@ export const PersonalList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-6" >
-                                                <Form.Label>Fecha de nacimiento</Form.Label>
+                                                <Form.Label className="font-weight-normal">Fecha de nacimiento<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="date" name="dateBirth" value={formik.values.dateBirth}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.dateBirth ? (
@@ -340,7 +348,7 @@ export const PersonalList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-6 mb-4" >
-                                                <Form.Label>Correo eléctronico</Form.Label>
+                                                <Form.Label className="font-weight-normal">Correo eléctronico<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="email" name="email" value={formik.values.email}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.email ? (
@@ -348,7 +356,7 @@ export const PersonalList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-6 mb-4" >
-                                                <Form.Label>Teléfono</Form.Label>
+                                                <Form.Label className="font-weight-normal">Teléfono<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control type="tel" name="phone" value={formik.values.phone}
                                                     onChange={formik.handleChange} />
                                                 {formik.errors.phone ? (
@@ -356,7 +364,7 @@ export const PersonalList = () => {
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-6 mb-4" >
-                                                <Form.Label>Rol</Form.Label>
+                                                <Form.Label className="font-weight-normal">Rol<span className="text-danger">*</span></Form.Label>
                                                 <Form.Select aria-label="Seleccionar rol" name="profession"
                                                     value={formik.values.profession}
                                                     onChange={formik.handleChange}>
@@ -394,7 +402,7 @@ export const PersonalList = () => {
                                 <DataTable
                                     columns={columns}
                                     data={filteredItems}
-                                    noDataComponent="No hay registros"
+                                    noDataComponent={<AlertData title={"No hay registros"} />}
                                     pagination
                                     paginationComponentOptions={paginationOptions}
                                     progressPending={isLoading}

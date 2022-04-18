@@ -226,7 +226,7 @@ export const ProjectEditProspect = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Proyecto anterior</Form.Label>
+                        <Form.Label className="font-weight-normal">Proyecto anterior</Form.Label>
                         <Form.Select name="project" value={formikModify.values.project} onChange={formikModify.handleChange}>
                           <option value="">No aplica</option>
                           {
@@ -238,21 +238,21 @@ export const ProjectEditProspect = ({
                         ) : null}
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Nombre</Form.Label>
+                        <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="name" value={formikModify.values.name} onChange={formikModify.handleChange} type="text" />
                         {formikModify.errors.name ? (
                           <span className='text-danger'>{formikModify.errors.name}</span>
                         ) : null}
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Estado del proyecto</Form.Label>
+                        <Form.Label className="font-weight-normal">Estado del proyecto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="statusProject" value={formikModify.values.statusProject?.description} onChange={formikModify.handleChange} type="text" disabled />
                         {formikModify.errors.statusProject ? (
                           <span className='text-danger'>{formikModify.errors.statusProject}</span>
                         ) : null}
                       </Form.Group>
                       <Form.Group className="col-md-12 mb-4" >
-                        <Form.Label>Descripción del proyecto</Form.Label>
+                        <Form.Label className="font-weight-normal">Descripción del proyecto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="description" value={formikModify.values.description} onChange={formikModify.handleChange} as="textarea" />
                         {formikModify.errors.description ? (
                           <span className='text-danger'>{formikModify.errors.description}</span>
@@ -287,6 +287,7 @@ export const ProjectEditProspect = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4"  >
+                      <Form.Label className="font-weight-normal">Seleccionar un cliente<span className="text-danger">*</span></Form.Label>
                         <Form.Select name="client" value={formikModify.values.client} onChange={formikModify.handleChange}>{
                             clients.map((cliente) => (
                               <option key={cliente.id} value={cliente.id}>{cliente.name + " " + cliente.surname + " " + cliente.secondSurname}</option>
@@ -326,28 +327,28 @@ export const ProjectEditProspect = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Presupuesto</Form.Label>
+                        <Form.Label className="font-weight-normal">Presupuesto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="cotizacion" value={formikModify.values.cotizacion} onChange={formikModify.handleChange} type="text" />
                         {formikModify.errors.cotizacion ? (
                           <span className='text-danger'>{formikModify.errors.cotizacion}</span>
                         ) : null}
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Precio al cliente</Form.Label>
+                        <Form.Label className="font-weight-normal">Precio al cliente<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="priceClient" value={formikModify.values.priceClient} onChange={formikModify.handleChange} type="text" />
                         {formikModify.errors.priceClient ? (
                           <span className='text-danger'>{formikModify.errors.priceClient}</span>
                         ) : null}
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Tiempo estimado (meses)</Form.Label>
+                        <Form.Label className="font-weight-normal">Tiempo estimado (meses)<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="months" value={formikModify.values.months} onChange={formikModify.handleChange} type="text" />
                         {formikModify.errors.months ? (
                           <span className='text-danger'>{formikModify.errors.months}</span>
                         ) : null}
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Cantidad de becarios</Form.Label>
+                        <Form.Label className="font-weight-normal">Cantidad de becarios<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="numberBeca" value={formikModify.values.numberBeca} onChange={formikModify.handleChange} type="text" />
                         {formikModify.errors.numberBeca ? (
                           <span className='text-danger'>{formikModify.errors.numberBeca}</span>

@@ -55,10 +55,10 @@ export const LoginScreen = (props) => {
               if (authorities[i].authority === "Coordinador") {
                 coordinador = true;
               }
-              if (authorities[i].authority === "RAPE") {
+              if (authorities[i].authority === "Responsable de Proyecto") {
                 rape = true;
               }
-              if (authorities[i].authority === "RD") {
+              if (authorities[i].authority === "Responsable de Desarrollo") {
                 rd = true;
               }
               if (authorities[i].authority === "Directivo") {

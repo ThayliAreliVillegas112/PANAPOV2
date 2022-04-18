@@ -98,19 +98,19 @@ export const ProjectDetailsProspect = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Proyecto anterior</Form.Label>
+                        <Form.Label className="font-weight-normal">Proyecto anterior</Form.Label>
                         <Form.Control name="project" value={values.project === null ||  values.project === undefined ? "No aplica" : values.project?.acronym} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Nombre</Form.Label>
+                        <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="name" value={values.name} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Estado del proyecto</Form.Label>
+                        <Form.Label className="font-weight-normal">Estado del proyecto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="statusProject" value={values.statusProject?.description} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-12 mb-4" >
-                        <Form.Label>Descripción del proyecto</Form.Label>
+                        <Form.Label className="font-weight-normal">Descripción del proyecto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="description" value={values.description} onChange={handleChange} as="textarea" readOnly />
                       </Form.Group>
                     </div>
@@ -142,7 +142,7 @@ export const ProjectDetailsProspect = ({
                   <Card.Body>
                     <div className="row">
                       <Form.Group className="col-md-6 mb-4"  >
-                        <Form.Label>Nombre completo</Form.Label>
+                        <Form.Label className="font-weight-normal">Nombre completo<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="client" value={values.client?.name+" "+values.client?.surname+" "+values.client?.secondSurname} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                     </div>
@@ -174,19 +174,19 @@ export const ProjectDetailsProspect = ({
                   <Card.Body>
                     <div className="row">
                     <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Presupuesto</Form.Label>
+                        <Form.Label className="font-weight-normal">Presupuesto<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="cotizacion" value={values.cotizacion} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Precio al cliente</Form.Label>
+                        <Form.Label className="font-weight-normal">Precio al cliente<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="priceClient" value={values.priceClient} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Tiempo estimado (meses)</Form.Label>
+                        <Form.Label className="font-weight-normal">Tiempo estimado (meses)<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="months" value={values.months} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                       <Form.Group className="col-md-6 mb-4" >
-                        <Form.Label>Cantidad de becarios</Form.Label>
+                        <Form.Label className="font-weight-normal">Cantidad de becarios<span className="text-danger">*</span></Form.Label>
                         <Form.Control name="numberBeca" value={values.numberBeca} onChange={handleChange} type="text" readOnly />
                       </Form.Group>
                     </div>

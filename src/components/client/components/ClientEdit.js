@@ -170,7 +170,7 @@ export const ClientEdit = ({
                 <Modal.Body>
                     <Form className="row" onSubmit={formikModify.handleSubmit}>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label>Correo electrónico</Form.Label>
+                            <Form.Label className="font-weight-normal">Correo electrónico<span className="text-danger">*</span> </Form.Label>
                             <Form.Control name="emailClient" type="email" placeholder="Email"
                                 value={formikModify.values.emailClient} onChange={formikModify.handleChange} />
                             {formikModify.errors.emailClient ? (
@@ -178,7 +178,7 @@ export const ClientEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label>Teléfono</Form.Label>
+                            <Form.Label className="font-weight-normal">Teléfono<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="phoneClient" type="tel" placeholder="7778895412"
                                 value={formikModify.values.phoneClient} onChange={formikModify.handleChange} />
                             {formikModify.errors.phoneClient ? (
@@ -186,7 +186,7 @@ export const ClientEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-2 mb-4">
-                            <Form.Label>Extensión</Form.Label>
+                            <Form.Label className="font-weight-normal">Extensión<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="extension" type="tel" placeholder="123"
                                 value={formikModify.values.extension} onChange={formikModify.handleChange} />
                             {formikModify.errors.extension ? (
@@ -197,7 +197,7 @@ export const ClientEdit = ({
                             <h5 className="text-bold">Información del representante del cliente</h5>
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label>Nombre</Form.Label>
+                            <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="nameRepre" type="text" placeholder="María"
                                 value={formikModify.values.nameRepre} onChange={formikModify.handleChange} />
                             {formikModify.errors.nameRepre ? (
@@ -205,7 +205,7 @@ export const ClientEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label>Primer apellido</Form.Label>
+                            <Form.Label className="font-weight-normal">Primer apellido<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="surnameRepre" type="text" placeholder="Valdez"
                                 value={formikModify.values.surnameRepre} onChange={formikModify.handleChange} />
                             {formikModify.errors.surnameRepre ? (
@@ -213,7 +213,7 @@ export const ClientEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label>Segundo apellido</Form.Label>
+                            <Form.Label className="font-weight-normal">Segundo apellido<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="secondSurnameRepre" type="text" placeholder="Díaz"
                                 value={formikModify.values.secondSurnameRepre} onChange={formikModify.handleChange} />
                             {formikModify.errors.secondSurnameRepre ? (
@@ -221,7 +221,7 @@ export const ClientEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label>Teléfono</Form.Label>
+                            <Form.Label className="font-weight-normal">Teléfono<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="phoneRepre" type="tel" placeholder=""
                                 value={formikModify.values.phoneRepre} onChange={formikModify.handleChange} />
                             {formikModify.errors.phoneRepre ? (
@@ -229,7 +229,7 @@ export const ClientEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label>Correo electrónico</Form.Label>
+                            <Form.Label className="font-weight-normal">Correo electrónico<span className="text-danger">*</span></Form.Label>
                             <Form.Control name="emailRepre" type="email" placeholder="Email"
                                 value={formikModify.values.emailRepre} onChange={formikModify.handleChange} />
                             {formikModify.errors.emailRepre ? (
@@ -249,7 +249,7 @@ export const ClientEdit = ({
                                         type="submit"
                                         disabled={!(formikModify.isValid && formikModify.dirty)}
                                     >
-                                        Guardar
+                                        Confirmar
                                     </Button>
                                 </Col>
                             </Row>

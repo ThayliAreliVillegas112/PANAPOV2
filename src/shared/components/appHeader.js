@@ -21,7 +21,7 @@ export const AppHeader = () => {
             </ul>
             <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                    <Button className="btn" onClick={logout}>
+                    <Button className="btn" onClick={logout} style={{ background: "#042B61", borderColor: "#042B61" }}>
                         Cerrar sesión
                     </Button>
                 </li>

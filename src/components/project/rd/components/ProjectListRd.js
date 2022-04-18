@@ -2,72 +2,71 @@ import React, { useState, useEffect } from "react";
 import { Button, Row, Col, Container, Form, Card, Badge, InputGroup, FormControl, Collapse, ProgressBar } from "react-bootstrap";
 import FeatherIcon from "feather-icons-react";
 import DataTable from "react-data-table-component";
-
 import { CustomLoader } from "../../../../shared/components/CustomLoader";
+import { AlertData } from "../../../../shared/components/alertData"
 import { FilterComponent } from "../../../../shared/components/FilterComponent";
 import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../../shared/plugins/alert";
-import { Link, useNavigate } from 'react-router-dom';
-import { ProjectDetailsRd } from "./ProjectDetailsRd"
-
+import {useNavigate } from 'react-router-dom';
+import { ProjectDetails } from "../../coordinador/components/ProjectDetails"; 
+import axios from "../../../../shared/plugins/axios";
 
 export const ProjectListRd = () => {
-
-    let value = "";
-    const navigation = useNavigate();
-
-    const handleReport = () => {
-        navigation('/report', { state: { id: value } });
-    }
-
-    const setValue = (id) => {
-        value = id;
-    }
-
     const [filterText, setFilterText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const [projectsRd, setProjectsRd] = useState([]);
     const [values, setValues] = useState({});
 
-    const [isOpen, setIsOpen] = useState(false);
     const [isOpenDetails, setIsOpenDetails] = useState(false);
     const [isOpenReports, setIsOpenReports] = useState(false);
-    const [isOpenData, setIsOpenData] = useState(false);
 
+    let value = "";
+    let nameProject = "";
+    const navigation = useNavigate();
+    let username = localStorage.getItem("username")
 
+    const handleReport = () => {
+        navigation('/report', { state: { id: value, name: nameProject } });
+    }
+
+    const setValue = (id, acronym) => {
+        value = id;
+        nameProject = acronym;
+    }
 
     useEffect(() => {
         setIsLoading(true);
         getProjectsRd();
     }, []);
 
-    let projectRd = [
-        {
-            "name": "PANAPO",
-            "progress": 80,
-            "status": "activo",
-            "priority": "alta",
-            "id": 134
-        },
-        {
-            "name": "TEMANTRA",
-            "progress": 50,
-            "status": "pausado",
-            "priority": "media",
-            "id": 135
-        },
-        {
-            "name": "SIGEH",
-            "progress": 20,
-            "status": "cancelado",
-            "priority": "baja",
-            "id": 136
-        }
-    ];
+    const getProjectsRd = async() => {
+        await axios({ url: "/project/", method: "GET" })
+            .then((response) => {
+                let data = response.data;
+                console.log(data);
+                let projectTemp = []
+                for (let r = 0; r < data.length; r++) {
+                    for (let m = 0; m < data[r].team.length; m++) {
+                        let temp = data[r];
+                        console.log(data[r].team[m].rolProject.description+" "+data[r].team[m].person.email)
+                        if (data[r].team[m].rolProject.description === "RD" && data[r].team[m].person.email === username) {
+                            projectTemp.push(temp)
+                        }
+                    }
+                    //console.log(data[i].team[m])
+                }
+                setProjectsRd(projectTemp);
+                console.log(projectTemp);
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const columns = [
         {
-            name: <h6 width="70%">#</h6>,
+            name: <h6>#</h6>,
             cell: (row, index) => <div><h6>{index + 1}</h6></div>,
             width: "4%",
             center: true,
@@ -75,13 +74,13 @@ export const ProjectListRd = () => {
         },
         {
             name: <h6 className="text-center">Identificador</h6>,
-            cell: (row) => <div className="txt4">{row.name}</div>,
+            cell: (row) => <div className="txt4">{row.acronym}</div>,
         },
         {
-            name: <h6 style={{ width: "100%" }}>Avance real del proyecto</h6>,
+            name: <h6>Avance real del proyecto</h6>,
             cell: (row) => <div className="txt4">
-                <ProgressBar now={row.progress} variant="success" />
-                <small>{row.progress}% completado</small>,
+                <ProgressBar now={row.percentage} variant="success" />
+                <small>{row.percentage}% completado</small>
             </div>,
 
         },
@@ -90,26 +89,26 @@ export const ProjectListRd = () => {
             cell: (row) =>
                 <>
                     {
-                        row.status === "activo" ? (
+                        row.statusProject.description === "Activo" ? (
                             <h6>
                                 <Badge bg="success">
-                                    <div>{row.status}</div>
+                                    <div>{row.statusProject.description}</div>
                                 </Badge>
                             </h6>
-                        ) : (row.status === "cancelado" ?
+                        ) : (row.statusProject.description === "Cancelado" ?
                             <h6>
                                 <Badge bg="danger">
-                                    <div>{row.status}</div>
+                                    <div>{row.statusProject.description}</div>
                                 </Badge>
-                            </h6> : (row.status === "pausado" ?
+                            </h6> : (row.statusProject.description === "Pausado" ?
                                 <h6>
                                     <Badge bg="warning">
-                                        <div>{row.status}</div>
+                                        <div>{row.statusProject.description}</div>
                                     </Badge>
                                 </h6> :
                                 <h6>
                                     <Badge bg="primary">
-                                        <div>{row.status}</div>
+                                        <div>{row.statusProject.description}</div>
                                     </Badge>
                                 </h6>
                             )
@@ -122,13 +121,13 @@ export const ProjectListRd = () => {
             cell: (row) =>
                 <>
                     {
-                        row.priority === "alta" ? (
+                        row.priority === "Alta" ? (
                             <h6>
                                 <Badge bg="danger">
                                     <div>{row.priority}</div>
                                 </Badge>
                             </h6>
-                        ) : (row.priority === "media" ?
+                        ) : (row.priority === "Media" ?
                             <h6>
                                 <Badge bg="warning">
                                     <div>{row.priority}</div>
@@ -159,7 +158,7 @@ export const ProjectListRd = () => {
             name: <div><h6>Ver reportes</h6></div>,
             cell: (row) => <div>
                 <Button variant="success" size="md" onClick={() => {
-                    setValue(row.id)
+                    setValue(row.id, row.acronym)
                     handleReport()
                 }}
                 >
@@ -170,16 +169,14 @@ export const ProjectListRd = () => {
         },
     ];
 
-    const getProjectsRd = () => {
-        setProjectsRd(projectRd);
-        setIsLoading(false);
-    };
-
-
     const paginationOptions = {
         rowsPerPageText: "Filas por página",
         rangeSeparatorText: "de",
     };
+
+    const filteredItems = projectsRd.filter(
+        (item) => item.acronym && item.acronym.toLowerCase().includes(filterText.toLowerCase())
+    );
 
     const searchComponent = React.useMemo(() => {
         const search = () => {
@@ -214,7 +211,8 @@ export const ProjectListRd = () => {
                             <Card.Body>
                                 <DataTable
                                     columns={columns}
-                                    data={projectsRd}
+                                    data={filteredItems}
+                                    noDataComponent={<AlertData title={"No hay registros"} />}
                                     pagination
                                     paginationComponentOptions={paginationOptions}
                                     progressPending={isLoading}
@@ -222,10 +220,9 @@ export const ProjectListRd = () => {
                                     subHeader
                                     subHeaderComponent={searchComponent}
                                 />
-                                <ProjectDetailsRd
+                                <ProjectDetails
                                     isOpenDetails={isOpenDetails}
-                                    handleClose={() => setIsOpenDetails(false)}
-                                    setProjectsRape={setProjectsRd}
+                                    handleClose={setIsOpenDetails}
                                     {...values}
                                 />
                             </Card.Body>

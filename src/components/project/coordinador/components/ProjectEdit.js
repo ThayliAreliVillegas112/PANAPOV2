@@ -23,19 +23,17 @@ export const ProjectEdit = ({
     initialValues: {
       statusProject: "",
       priority: "",
-
     },
     validationSchema: yup.object().shape({
       priority: yup.string().required("Campo obligatorio"),
+      statusProject: yup.string().required("Campo obligatorio"),
     }),
     onSubmit: (valuesFormik) => {
-      
       const project1 = {
         ...valuesFormik,
          statusProject:{
            id: parseInt(valuesFormik.statusProject),
          }
-         
       };
       console.log(project1);
       Alert.fire({
@@ -111,7 +109,7 @@ export const ProjectEdit = ({
       status: status
     });
     formikModify.values.id = id
-    formikModify.values.statusProject = statusProject;
+    formikModify.values.statusProject = statusProject?.id;
     formikModify.values.priority = priority;
   }, [isOpenUpdate]);
 
@@ -124,9 +122,8 @@ export const ProjectEdit = ({
         <Modal.Body>
           <Form onSubmit={formikModify.handleSubmit}>
             <Form.Group className="col-md-12 mb-4">
-              <Form.Label className="font-weight-normal">Estado del proyecto</Form.Label>
-              <Form.Select name="statusProject" value={formikModify.values.statusProject?.id} onChange={formikModify.handleChange}>
-                <option value="">Seleccione una opción</option>
+              <Form.Label className="font-weight-normal">Estado del proyecto<span className="text-danger">*</span></Form.Label>
+              <Form.Select name="statusProject" value={formikModify.values.statusProject} onChange={formikModify.handleChange}>
                 <option value="2">Activo</option>
                 <option value="5">Cancelado</option>
                 <option value="4">Cerrado</option>
@@ -162,7 +159,7 @@ export const ProjectEdit = ({
                     type="submit"
                     disabled={!(formikModify.isValid && formikModify.dirty)}
                   >
-                    Guardar
+                    Confirmar
                   </Button>
                 </Col>
               </Row>

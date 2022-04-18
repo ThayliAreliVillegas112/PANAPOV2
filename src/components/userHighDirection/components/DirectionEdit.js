@@ -196,7 +196,7 @@ export const DirectionEdit = ({
         <Modal.Body>
           <Form className="row" onSubmit={formikModify.handleSubmit}>
             <Form.Group className="col-md-4 mb-4">
-              <Form.Label className="form-label">Nombre</Form.Label>
+              <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 name="name"
                 value={formikModify.values.name}
@@ -204,7 +204,7 @@ export const DirectionEdit = ({
               />
             </Form.Group>
             <Form.Group className="col-md-4 mb-4">
-              <Form.Label className="form-label">Primer apellido</Form.Label>
+              <Form.Label className="font-weight-normal">Primer apellido<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 name="surname"
                 value={formikModify.values.surname}
@@ -212,7 +212,7 @@ export const DirectionEdit = ({
               />
             </Form.Group>
             <Form.Group className="col-md-4 mb-4">
-              <Form.Label className="form-label">Segundo apellido</Form.Label>
+              <Form.Label className="font-weight-normal">Segundo apellido<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 name="secondSurname"
                 value={formikModify.values.secondSurname}
@@ -220,7 +220,7 @@ export const DirectionEdit = ({
               />
             </Form.Group>
             <Form.Group className="col-md-6 mb-4">
-              <Form.Label className="form-label">Contraseña</Form.Label>
+              <Form.Label className="font-weight-normal">Contraseña</Form.Label>
               <Form.Control
                 name="password"
                 type="password"
@@ -233,7 +233,7 @@ export const DirectionEdit = ({
               </Form.Text>
             </Form.Group>
             <Form.Group className="col-md-6 mb-4">
-              <Form.Label className="form-label">Confirmar contraseña</Form.Label>
+              <Form.Label className="font-weight-normal">Confirmar contraseña</Form.Label>
               <Form.Control
                 name="confirmPassword"
                 type="password"

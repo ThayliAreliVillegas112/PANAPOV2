@@ -55,24 +55,43 @@ export const ProjectStart = ({
   const [idRd, setIdRd] = useState("")
   const [idRape, setIdRape] = useState("")
 
-  const addProgramador = async() => {
-    console.log(value)
-    await axios({ url: "/person/"+value, method: "GET" })
-      .then(async (response) => {
-        let programadores = [];
-        programadores = programmers
-        let data = response.data;
-        console.log(data)
-        programadores.push(data)
-        setProgrammers(programadores)
-        console.log(programadores)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const addProgramador = async () => {
+    let programadores = [];
+    programadores = programmers
+    let exists = false
+    if(programadores!=""){
+      for (let m = 0; m < programadores.length; m++) {
+        if (value == programadores[m].id) {
+          exists = true;
+        }
+      }
+    }
+    if (!exists) {
+      await axios({ url: "/person/" + value, method: "GET" })
+        .then(async (response) => {
+          console.log(response)
+          let data = [
+            {
+              id: response.data.id,
+              name: response.data.name,
+              email: response.data.email,
+              rol: response.data.profession.description,
+            }
+          ];
+          programadores = programadores.concat(data)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      setProgrammers(programadores)
+      console.log(programmers)
+    }else{
+      console.log("error")
+    }
   }
 
   let value = "";
+
   const setId = (id) => {
     value = id;
   }
@@ -83,8 +102,13 @@ export const ProjectStart = ({
       cell: (row) => <div className="txt4">{row.name}</div>,
     },
     {
+      name: <h6 className="text-center">Correo</h6>,
+      cell: (row) => <div className="txt4">{row.email}</div>,
+    },
+
+    {
       name: <h6>Rol</h6>,
-      cell: (row) => <div className="txt4">{row.profession}</div>,
+      cell: (row) => <div className="txt4">{row.rol}</div>,
     }
   ]
 
@@ -442,9 +466,9 @@ export const ProjectStart = ({
                               <Form.Group>
                                 <DataTable
                                   columns={columnsProg}
-                                  data={programmers}
                                   noDataComponent={<AlertData title={"No hay programadores seleccionados"} />}
                                   pagination
+                                  data={programmers}
                                   progressPending={isLoading}
                                   progressComponent={<CustomLoader />}
                                 />

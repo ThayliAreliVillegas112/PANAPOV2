@@ -10,6 +10,11 @@ import { CustomLoader } from "../../../shared/components/CustomLoader";
 import { FilterComponent } from "../../../shared/components/FilterComponent";
 import Alert, { msjConfirmacion, titleConfirmacion, titleError, msjError, msjExito, titleExito } from "../../../shared/plugins/alert";
 import main from "../../../assets/css/main.css";
+import { AlertData } from "../../../shared/components/alertData"
+//iconos de fontawesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 export const RoleList = () => {
     const [roles, setRoles] = useState([]);
@@ -142,7 +147,7 @@ export const RoleList = () => {
                         setValues(row)
                         setIsOpenUpdate(true)
                     }}>
-                    <FeatherIcon icon="edit" />
+                    <FontAwesomeIcon  icon={faEdit} size="lg" />
                 </Button>
             </div>,
             align: "center"
@@ -205,14 +210,14 @@ export const RoleList = () => {
                                     <Card.Body>
                                         <Form className="row" onSubmit={formik.handleSubmit}>
                                             <Form.Group className="col-md-6 mb-4">
-                                                <Form.Label>Acrónimo</Form.Label>
+                                                <Form.Label className="font-weight-normal">Acrónimo<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control name="acronym" value={formik.values.acronym} onChange={formik.handleChange} type="text" placeholder="Ej: RD" />
                                                 {formik.errors.acronym ? (
                                                     <span className="text-danger">{formik.errors.acronym}</span>
                                                 ) : null}
                                             </Form.Group>
                                             <Form.Group className="col-md-6 mb-4">
-                                                <Form.Label>Descripción</Form.Label>
+                                                <Form.Label className="font-weight-normal">Descripción<span className="text-danger">*</span></Form.Label>
                                                 <Form.Control name="description" value={formik.values.description} onChange={formik.handleChange} type="text" placeholder="Ej: Responsable de desarrollo" />
                                                 {formik.errors.description ? (
                                                     <span className="text-danger">{formik.errors.description}</span>
@@ -243,7 +248,7 @@ export const RoleList = () => {
                                 <DataTable
                                     columns={columns}
                                     data={filteredItems}
-                                    noDataComponent="No hay registros"
+                                    noDataComponent={<AlertData title={"No hay registros"} />}
                                     pagination
                                     paginationComponentOptions={paginationOptions}
                                     progressPending={isLoading}

@@ -153,7 +153,7 @@ export const PersonalEdit = ({
                 <Modal.Body>
                     <Form className="row" onSubmit={formikModify.handleSubmit}>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label className="form-label">Nombre</Form.Label>
+                            <Form.Label className="font-weight-normal">Nombre<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="name"
                                 value={formikModify.values.name}
@@ -164,7 +164,7 @@ export const PersonalEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label className="form-label">Primer apellido</Form.Label>
+                            <Form.Label className="font-weight-normal">Primer apellido<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="surname"
                                 value={formikModify.values.surname}
@@ -175,7 +175,7 @@ export const PersonalEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-4 mb-4">
-                            <Form.Label className="form-label">Segundo apellido</Form.Label>
+                            <Form.Label className="font-weight-normal">Segundo apellido<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 name="secondSurname"
                                 value={formikModify.values.secondSurname}
@@ -186,7 +186,7 @@ export const PersonalEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label className="form-label">Fecha de nacimiento</Form.Label>
+                            <Form.Label className="font-weight-normal">Fecha de nacimiento<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 type="date"
                                 name="dateBirth"
@@ -198,7 +198,7 @@ export const PersonalEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label>Teléfono</Form.Label>
+                            <Form.Label className="font-weight-normal">Teléfono<span className="text-danger">*</span></Form.Label>
                             <Form.Control
                                 type="tel"
                                 name="phone"
@@ -210,22 +210,11 @@ export const PersonalEdit = ({
                             ) : null}
                         </Form.Group>
                         <Form.Group className="col-md-6 mb-4">
-                            <Form.Label>Rol</Form.Label>
+                            <Form.Label className="font-weight-normal">Rol<span className="text-danger">*</span></Form.Label>
                             <Form.Select aria-label="Seleccionar una opción"
                                 value={formikModify.values.profession} onChange={formikModify.handleChange} name="profession">
-                                {
-                                    formikModify.values.profession === "1" ? (
-                                        <>
-                                            <option value="1">Docente</option>
-                                            <option value="2">Becario</option>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <option value="2">Becario</option>
-                                            <option value="1">Docente</option>
-                                        </>
-                                    )
-                                }
+                                <option value="1">Docente</option>
+                                <option value="2">Becario</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-4 mt-3">
@@ -244,7 +233,7 @@ export const PersonalEdit = ({
                                         type="submit"
                                         disabled={!(formikModify.isValid && formikModify.dirty)}
                                     >
-                                        Guardar
+                                        Confirmar
                                     </Button>
                                 </Col>
                             </Row>
@@ -255,4 +244,3 @@ export const PersonalEdit = ({
         </>
     );
 };
-

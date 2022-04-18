@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, FormControl, InputGroup, Form } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 import "../../../src/assets/css/main.css";
 import "../../../src/assets/css/util.css";
 import "../../../src/assets/css/Styles.css";
@@ -8,10 +8,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export const FilterComponent = ({ filterText, onFilter, onSearch }) => (
   <>
     <Col md={{ span: 4}}>
-      <InputGroup className="mb-3">
+      <Form.Group className="mb-3">
         <Form.Label>Buscar:</Form.Label>
-        <FormControl
-        className="ms-3"
+        <Form.Control
           id="search"
           type="text"
           placeholder="Buscar"
@@ -20,7 +19,7 @@ export const FilterComponent = ({ filterText, onFilter, onSearch }) => (
           onChange={onFilter}
           style={{height: "40px"}}
         />
-      </InputGroup>
+      </Form.Group>
     </Col>
   </>
 );

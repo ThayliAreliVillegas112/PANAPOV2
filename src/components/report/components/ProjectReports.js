@@ -7,55 +7,45 @@ import FeatherIcon from "feather-icons-react";
 import DataTable from "react-data-table-component";
 import { ReportDetails } from './ReportDetails';
 import axios from "../../../shared/plugins/axios";
+import { useNavigate } from 'react-router-dom';
+import { AlertData } from "../../../shared/components/alertData"
 
 export const ProjectReports = ({
-  data,
-
-
+  data, name
 }) => {
+  const navigation = useNavigate();
 
-  const [values, setValues] = useState({data: data});
+  const [values, setValues] = useState({ data: data });
   const [isLoading, setIsLoading] = useState(false);
   const [reports, setReports] = useState([]);
   const [id, setId] = useState()
 
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(data)
   useEffect(() => {
+    setIsLoading(true);
     setValues({
       data: data,
-      
     })
+    console.log(id);
     document.title = "PANAPO | Reportes";
     setId(data);
-    
-    console.log("Si jalaba hace un momento chin**** x7");
-    
     getReport();
-    
-    
   }, [id])
-
-
 
   const getReport = () => {
     axios({ url: "/report/", method: "GET" })
-        .then((response) => {
-            // let reportT;
-            // reportT = response.data;
-            let data = response.data;
-            let reportTemp = data.filter(item => item.project.id === id);
-            setReports(reportTemp);
-            console.log(reportTemp);
-            setIsLoading(false);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+      .then((response) => {
+        let data = response.data;
+        console.log(data);
+        let reportTemp = data.filter(item => item.project?.id === id);
+        setReports(reportTemp);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
-
-  
 
   const columns = [
     {
@@ -149,16 +139,10 @@ export const ProjectReports = ({
     }
   ];
 
-  // const getReports = () => {
-  //   setReports(report);
-  //   setIsLoading(false);
-  // };
-
   const paginationOptions = {
     rowsPerPageText: "Filas por página",
     rangeSeparatorText: "de",
   };
-
 
   return (
     <div className="content-wrapper screenHeight">
@@ -167,7 +151,13 @@ export const ProjectReports = ({
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1 class="font-weight-bold">Nombre del proyecto</h1>
+                <h1 class="font-weight-bold">Reportes de {name}</h1>
+              </div>
+              <div class="col-sm-6 text-end">
+                <Button className="btn" style={{ background: "#042B61", borderColor: "#042B61" }}
+                onClick={()=>navigation("/", { replace: true })}>
+                  Volver al Panel de proyectos
+                </Button>
               </div>
             </div>
           </div>
@@ -185,9 +175,10 @@ export const ProjectReports = ({
                 <DataTable
                   columns={columns}
                   data={reports}
+                  noDataComponent={<AlertData title={"No hay registros"} />}
                   pagination
                   paginationComponentOptions={paginationOptions}
-                  noDataComponent="No hay registros"
+                  
                   progressPending={isLoading}
                   progressComponent={<CustomLoader />}
                 />
